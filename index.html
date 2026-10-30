@@ -14,18 +14,61 @@ html, body {
     overflow: hidden;
 }
 
-img {
+video {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    display: block;
 }
 </style>
+
 </head>
 
 <body>
 
-<img src="kelowna-wrap1.jpg" alt="Menu">
+<video id="menuVideo" autoplay muted loop playsinline preload="auto">
+    <source src="wrap-kelowna.mp4" type="video/mp4">
+</video>
+
+<script>
+const video = document.getElementById("menuVideo");
+const params = new URLSearchParams(window.location.search);
+
+function startVideo() {
+    const promise = video.play();
+
+    if (promise !== undefined) {
+        promise.catch(() => {
+            setTimeout(() => {
+                video.play().catch(() => {});
+            }, 1000);
+        });
+    }
+}
+
+if (params.get("compat") === "1") {
+
+    video.autoplay = false;
+    video.load();
+
+    window.onload = function () {
+        startVideo();
+    };
+
+    document.addEventListener("visibilitychange", function () {
+        if (!document.hidden) {
+            startVideo();
+        }
+    });
+
+} else {
+
+    window.onload = function () {
+        startVideo();
+    };
+
+}
+</script>
 
 </body>
 </html>
+
